@@ -219,14 +219,14 @@ a {
 }
 
 .galeria .item {
-    width: 180px !important;
-    max-width: 180px !important;
-    padding: 8px !important;
+    width: 240px;
+    max-width: 240px;
+    padding: 8px;
 }
 
 .galeria .item img {
-    width: 150px !important;
-    max-width: 150px !important;
+    width: 200px;
+    max-width: 200px;
     height: auto !important;
 }
 
