@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../css/estil.css">
+<title>Pila baptismal</title>
+</head>
+<body>
+
+
+<img src="../fotos grans/pila_baptismal_vella" class="fitxa-imatge">
+<h1 class="fitxa-titol">Pila baptismal</h1>
+
+<div class="fitxa-text">
+<p>El 1907 es substituí la pila baptismal antiga, del 1685, per una de nova, dissenyada pel marquès de Vivot  i llaurada per Antoni Rotger, i s'obrí la finestra del baptisteri i s'hi col·locà el  vitrall.</p>
+</div>
+
+<p><a class="tornar" href="../zones/nau.html">← Tornar</a></p>
+
+<div class="logos-footer">
+  <img src="../fotos/logo-maioricasacra.png" alt="">
+  <img src="../fotos/logo-bisbat.png" alt="">
+</div>
+
+<div class="copyright">
+  © 2026 Maiorica Sacra. Tots els drets reservats.
+</div>
+</body>
+</html>

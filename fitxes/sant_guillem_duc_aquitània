@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../css/estil.css">
+<title>Guillem, duc d’Aquitània</title>
+</head>
+<body>
+
+
+<img src="../fotos grans/sant_guillem_duc_aquitània" class="fitxa-imatge">
+<h1 class="fitxa-titol">Guillem, duc d’Aquitània</h1>
+
+<div class="fitxa-text">
+<p>Guillem de Malavalle (s. XII), també anomenat sant Guillem el Gran, va ser un anacoreta que inspirà la fundació de l’orde dels Eremites de Sant Guillem. Segons una tradició medieval (que probablement el confon amb sant Guillem de Gellone, duc d’Aquitània i comte de Tolosa dels segles VIII-IX, que renuncià a la vida militar per retirar-se a la vida monàstica) va ser un cavaller de la família ducal d’Aquitània que, per la seva vida dissoluta, fou excomunicat pel papa Eugeni III. Convertit per sant Bernat de Claravall, pelegrinà a Jerusalem, Roma i Santiago de Compostel·la i, en tornar, es retirà a la vida eremítica.</p>
+<p>Aquesta pintura representa el moment de la conversió de sant Guillem per sant Bernat, però mesclant-lo amb la iconografia de la renúncia de Guillem d’Aquitània a la vida militar per abraçar la vida religiosa, simbolitzada pel casc i l’espasa a terra i per l’actitud d’estorament dels soldats. Duc de gandia???</p>
+</div>
+
+<p><a class="tornar" href="../zones/capella_de_santa_catalina_thomas.html">← Tornar</a></p>
+
+<div class="logos-footer">
+  <img src="../fotos/logo-maioricasacra.png" alt="">
+  <img src="../fotos/logo-bisbat.png" alt="">
+</div>
+
+<div class="copyright">
+  © 2026 Maiorica Sacra. Tots els drets reservats.
+</div>
+</body>
+</html>

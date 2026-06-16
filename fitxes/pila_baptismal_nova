@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../css/estil.css">
+<title>Pila baptismal</title>
+</head>
+<body>
+
+
+<img src="../fotos grans/pila_baptismal_nova" class="fitxa-imatge">
+<h1 class="fitxa-titol">Pila baptismal</h1>
+
+<div class="fitxa-text">
+<p>Pila baptismal del 1907 que substituí la pila baptismal antiga, de 1685. Va ser dissenyada per Joan Miquel Sureda i Verí, marquès de Vivot i senyor de Sant Martí, i tallada en marbre groc de Canyamel per Antoni Rotger. La corona una talla de l’Anyell de Déu, en referència a les paraules pronunciades per sant Joan Baptista en el moment de batejar Jesús: "Aquest és l'anyell de Déu, el qui lleva el pecat del món”. La banderola amb una creu llatina vermella sobre fons blanc que l’acompanya representa el triomf de Jesús sobre la mort i el pecat original.</p>
+<p>La situació del baptisteri en una de les primeres capelles del temple, prop del portal major, simbolitza que el baptisme és l’entrada del batiat a l’Església.</p>
+</div>
+
+<p><a class="tornar" href="../zones/baptisteri.html">← Tornar</a></p>
+
+<div class="logos-footer">
+  <img src="../fotos/logo-maioricasacra.png" alt="">
+  <img src="../fotos/logo-bisbat.png" alt="">
+</div>
+
+<div class="copyright">
+  © 2026 Maiorica Sacra. Tots els drets reservats.
+</div>
+</body>
+</html>

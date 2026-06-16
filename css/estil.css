@@ -1,0 +1,219 @@
+body {
+    font-family: "Inter", sans-serif;
+    margin: 0;
+    padding: 16px;
+    background-color: #FBF5EC;
+    color: #2b1f1a;
+    line-height: 1.55;
+}
+
+h1 {
+    font-family: "Inter", sans-serif;
+    font-size: 1.8rem;
+    line-height: 2rem;
+    font-weight: 400;
+    color: #583D29;
+    margin-bottom: 20px;
+    margin-top: 70px;
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+    color: #5a3e2b;
+}
+
+
+/* portada */
+.contenidor-imatge {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto 18px auto;
+}
+
+.contenidor-imatge img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+}
+
+.boto-zona {
+    position: absolute;
+    background-color: #5D3C25;
+    color: #FBF5EC;
+    padding: 3px 7px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    text-align: center;
+    line-height: 1.05;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+.llista-zones {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 700px;
+    margin: 0 auto 24px auto;
+}
+
+.llista-zones a {
+    display: block;
+    color: #5D3C25;
+    padding: 4px 0;
+    font-size: 1.3rem;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.3;
+    transition: color 0.2s ease;
+}
+
+.llista-zones a:hover {
+    color: #5D3C25;  
+    text-decoration: underline;
+}
+
+/* galeries de zones */
+.galeria {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.item-link {
+    display: block;
+}
+
+.item {
+    max-width: 420px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    border: 2px solid #e7ddd2;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.16);
+    border-color: #b88b67;
+}
+
+.item img {
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+    margin: 0 auto 10px auto;
+}
+
+.item-titol {
+    margin: 0 0 6px 0;
+    font-size: 1.05rem;
+    font-weight: bold;
+    color: #5D3C25;
+}
+
+.item-natura {
+    margin: 0 0 10px 0;
+    font-size: 0.95rem;
+    color: #6d5a4a;
+}
+
+.item-clica {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #8b5e3c;
+}
+
+/* fitxes */
+.fitxa-imatge {
+    width: 100%;
+    max-width: 700px;
+    height: auto;
+    display: block;
+    margin: 0 auto 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+}
+
+.fitxa-titol {
+    text-align: center;
+    margin: 10px 0 20px 0;
+    font-size: 1.5rem;
+    color: #583D29;
+}
+
+.fitxa-text {
+    background: #E2D9CE;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    padding: 16px;
+    border-radius: 10px;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.tornar {
+    display: block;
+    color: #5D3C25;
+    padding: 4px 0;
+    font-size: 1.3rem;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.3;
+    transition: color 0.2s ease;
+}
+
+@media (min-width: 700px) {
+    body {
+        padding: 28px;
+    }
+}
+
+
+.logo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+}
+
+.logo img {
+    height: 60px;   
+    width: auto;
+}
+
+.logos-footer {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logos-footer img {
+    height: 60px;
+    width: auto;
+    margin: 0;
+}
+
+.copyright {
+    margin-top: 10px;
+    font-size: 0.75rem;
+    color: #6d5a4a;
+    text-align: left;
+}

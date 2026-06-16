@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../css/estil.css">
+<title>Trobada de la Mare de Déu de Lluc</title>
+</head>
+<body>
+
+
+<img src="../fotos grans/trobada_lluc" class="fitxa-imatge">
+<h1 class="fitxa-titol">Trobada de la Mare de Déu de Lluc</h1>
+
+<div class="fitxa-text">
+<p>Segons conta la llegenda, devers l’any 1254, poc després de la conquesta de Mallorca pel rei En Jaume I, un al·lot musulmà convertit al cristianisme, i que en el baptisme havia rebut el nom de Lluc, pasturava les ovelles per l’alqueria musulmana d’Arlluch. Cada dissabte, el pastoret veia uns resplendors celestials que sorgien d’unes penyes, acompanyats d’una música harmoniosa. Ho contà a un monjo cistercenc que vivia a l’església de Sant Pere d’Escorca, i el dissabte següent tots dos acudiren plegats al lloc dels fets.\\ Seguint els resplendors, trobaren dins una coveta una talla de la Mare de Déu morena i petita. La traslladaren a l’església de Sant Pere, però la imatge tornà miraculosament al lloc on havia estat trobada. El prodigi es repetí diverses vegades fins que entengueren que la Mare de Déu volia ser venerada al lloc on havia estat trobada i s’hi aixecà una capella on la guardaren.\\ El nom de la Verge s’ha relacionat tradicionalment tant amb el del pastoret com amb el de l’alqueria on fou trobada la talla, i també amb la paraula llatina *lucus*, que significa “bosc sagrat”.</p>
+</div>
+
+<p><a class="tornar" href="../zones/capella_de_la_mare_de_deu_de_lluc.html">← Tornar</a></p>
+
+<div class="logos-footer">
+  <img src="../fotos/logo-maioricasacra.png" alt="">
+  <img src="../fotos/logo-bisbat.png" alt="">
+</div>
+
+<div class="copyright">
+  © 2026 Maiorica Sacra. Tots els drets reservats.
+</div>
+</body>
+</html>
