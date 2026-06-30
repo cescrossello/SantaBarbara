@@ -196,7 +196,10 @@ index_html <- paste0(
 <body>
 
 
-', logo, '
+<a class="logo">
+  <img src="fotos/logo_stabarbara.png" alt="Inici">
+</a>
+
 <h1>Església de Santa Bàrbara</h1>
 
 <div class="contenidor-imatge">
@@ -248,6 +251,9 @@ for (i in seq_len(nrow(dades))) {
 </head>
 <body>
 
+<a class="logo">
+  <img src="../fotos/logo_stabarbara.png" alt="Inici">
+</a>
 
 <img src="../', carpeta_fotos, '/', foto, '" class="fitxa-imatge">
 <h1 class="fitxa-titol">', titol, '</h1>
@@ -298,6 +304,9 @@ for (zona in zones_uniques) {
 </head>
 <body>
 
+<a class="logo">
+  <img src="../fotos/logo_stabarbara.png" alt="Inici">
+</a>
 
 <h1>', zona, '</h1>
 <div class="galeria">
