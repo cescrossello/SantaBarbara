@@ -40,7 +40,7 @@ if (!dir.exists(carpeta_zonas)) dir.create(carpeta_zonas)
 slugify <- function(text) {
   text <- trimws(tolower(text))
   # llevar accents
-  text <- iconv(text, from = "UTF-8", to = "ASCII//TRANSLIT")
+  text <- iconv(text, from = "UTF-8", to = "ASCII//TRANSLIT",sub = "")
   # espais a _
   text <- gsub(" ", "_", text)
   # llevar caràcters estranys
