@@ -1,0 +1,886 @@
+---
+title: "Generador Vilafranca"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+csv_file <- "Vilafranca.csv"
+csv_historia <- "historia.csv"
+```
+
+```{r}
+carpeta_fotos <- "fotos"
+carpeta_thumbs <- "thumbs"
+carpeta_fitxes <- "fitxes"
+carpeta_zones <- "zones"
+carpeta_fichas <- "fichas"
+carpeta_zonas <- "zonas"
+genera_portada <- TRUE
+genera_portada_cast <- genera_portada
+index_cast_file <- "index_cast.html"
+logo_html <- '<a class="logo">
+  <img src="fotos/logo_stabarbara.png" alt="Inici">
+</a>'
+logo2_html <- '<a class="logo">
+  <img src="../fotos/logo_stabarbara.png" alt="Inici">
+</a>'
+
+
+usa_thumbs <- dir.exists(carpeta_thumbs)
+
+if (!dir.exists(carpeta_fitxes)) dir.create(carpeta_fitxes)
+if (!dir.exists(carpeta_zones)) dir.create(carpeta_zones)
+if (!dir.exists(carpeta_fichas)) dir.create(carpeta_fichas)
+if (!dir.exists(carpeta_zonas)) dir.create(carpeta_zonas)
+
+slugify <- function(text) {
+  text <- trimws(tolower(text))
+  # llevar accents
+  text <- iconv(text, from = "UTF-8", to = "ASCII//TRANSLIT")
+  # espais a _
+  text <- gsub(" ", "_", text)
+  # llevar caràcters estranys
+  text <- gsub("[^a-z0-9_]", "", text)
+  text
+}
+
+format_marques <- function(x) {
+  x <- gsub("\\*\\*(.*?)\\*\\*", "<strong>\\1</strong>", x)
+  x <- gsub("\\*(.*?)\\*", "<em>\\1</em>", x)
+  x
+}
+
+
+format_info <- function(text) {
+
+  parts <- strsplit(text, "//", fixed = TRUE)[[1]]
+  parts <- gsub("\u2028", "", parts, fixed = TRUE)
+  parts <- gsub("\u2029", "", parts, fixed = TRUE)
+  parts <- trimws(parts)  
+  parts <- parts[parts != ""]
+
+  resultat <- c()
+  dins_llista <- FALSE
+
+for (p in parts) {
+
+  if (startsWith(p, "* ")) {
+
+    item <- sub("^\\*\\s*", "", p)
+    item <- format_marques(item)
+
+    if (!dins_llista) {
+      resultat <- c(resultat, "<ul>")
+      dins_llista <- TRUE
+    }
+
+    resultat <- c(
+      resultat,
+      paste0("<li>", item, "</li>")
+    )
+
+  } else {
+
+    p <- format_marques(p)
+
+    if (dins_llista) {
+      resultat <- c(resultat, "</ul>")
+      dins_llista <- FALSE
+    }
+
+    resultat <- c(resultat, paste0("<p>", p, "</p>"))
+  }
+}
+  
+  if (dins_llista) {
+    resultat <- c(resultat, "</ul>")
+  }
+
+  paste(resultat, collapse = "\n")
+}
+
+selector_idioma <- function(href_cat, href_esp) {
+  paste0(
+    '<div class="selector-idioma" style="position:absolute; top:10px; right:16px; z-index:2000; min-height:60px; display:flex; align-items:center; justify-content:flex-end; gap:22px; font-size:1.05rem; font-weight:600;">',
+    '<a href="', href_cat, '" style="color:#5D3C25; text-decoration:none;">CAT</a>',
+    '<a href="', href_esp, '" style="color:#5D3C25; text-decoration:none;">ESP</a>',
+    '</div>\n'
+  )
+}
+```
+
+
+
+```{r}
+dades <- read.csv2(csv_file, stringsAsFactors = FALSE, encoding = "UTF-8")
+dades_historia <- read.csv2(csv_historia,stringsAsFactors = FALSE,encoding = "UTF-8")
+
+fitxers_historia <- sub(
+  "\\.[^.]+$",
+  ".html",
+  trimws(dades_historia$Foto)
+)
+
+
+# Assegurar noms esperats
+names(dades) <- trimws(names(dades))
+zones_uniques <- unique(trimws(dades$Localització))
+zones_unicas <- unique(trimws(dades$Localización))
+names(dades_historia) <- trimws(names(dades_historia))
+```
+
+
+## Català
+
+### Portada
+
+Amb `genera_portada=TRUE` genera la portada amb la imatge `esglesia_general.jpg` i botons  per les zones. 
+Aquests botons s'han de definir i colocar a mà.
+
+```{r genera-portada, eval=genera_portada}
+imatge_portada <- "planta.jpg"
+
+# Posicions (s'han de definir a mà)
+posicions <- data.frame(
+zona = c(
+"Altar<br> Miraculosa",
+"Altar<br> Pietat",
+"Altar<br> Puríssima",
+"Altar<br> Trinitat",
+"Altar<br> Sagrari",
+"Altar<br> Sagrat Cor" ,
+"Baptisteri",
+"Capella<br> Lluc",
+"Capella<br> Carme",
+"Capella<br> Roser",
+"Capella<br> Sant Josep" ,
+"Capella<br> Sta Catalina",
+ "Capella<br> Naixement" ,
+"Capella<br> Sant Crist",
+"Exterior",
+"Nau",
+"Presbiteri",
+"Història"),
+top = c(
+"50%", #Mirac
+"31%", #APi
+"17.5%",  #APur
+"24.5%", #Trin
+"17.5%", #AS
+"31%", #SC
+"88%", #Bap
+"68.5%", #Lluc
+"78%", #Carme
+"59%", #Roser
+"68.5%", #StJosp
+"59%", #StCT
+"88%", #Naix
+"78%", #StCr
+"95.5%",#Ext
+"50%", #Nau
+"5%", #Prb
+"5%"), #Hist
+#
+left = c(
+"57%",  #Mirac
+"77.5%", #APi
+"22.5%", #APur
+"7.5%",#Trin
+"62.5%", #AS
+"7.5%", #SC
+"25%", #Bap
+"25%", #Lluc
+"25%", #Carme
+"25%", #Roser
+"54%",#StJosp
+"54%",#StCT
+"51%",  #Naix
+"54.5%", #StCr
+"40%",  #Ext
+"40%", #Nau
+"40%", #Prb
+"7.5%"), #Hist
+stringsAsFactors = FALSE
+)
+
+# Afegir nom de fitxer
+posicions$fitxer <- c(paste0(slugify(zones_uniques), ".html"),"primitiva.html")
+
+# Botons
+botons_html <- paste0(
+  '<a href="zones/', posicions$fitxer, '">
+    <div class="boto-zona" style="top: ', posicions$top, '; left: ', posicions$left, ';">
+      ', posicions$zona, '
+    </div>
+  </a>',
+  collapse = "\n"
+)
+
+
+index_html <- paste0(
+'<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/estil.css">
+<title>Santa Bàrbara</title>
+</head>
+
+<body>
+
+
+', logo_html, '
+', selector_idioma("index.html", index_cast_file), '
+<h1>Església de Santa Bàrbara</h1>
+
+<div class="contenidor-imatge">
+    <img src="fotos/', imatge_portada, '" alt="Planta">
+
+', botons_html, '
+
+</div>
+
+
+<div class="logos-footer">
+  <img src="fotos/logo-maioricasacra.png" alt="">
+  <img src="fotos/logo-bisbat.png" alt="">
+</div>
+
+<div class="copyright">
+  © 2026 Maiorica Sacra. Tots els drets reservats.
+</div>
+</body>
+</html>'
+)
+
+writeLines(index_html, "index.html")
+```
+
+
+### Història
+
+```{r}
+
+for (i in seq_len(nrow(dades_historia))) {
+
+  foto <- trimws(dades_historia$Foto[i])
+  titol <- trimws(dades_historia$Titol[i])
+  text <- trimws(dades_historia$Text_cat[i])
+  nom_html <- fitxers_historia[i]
+
+  text_html <- format_info(text)
+
+  # Navegació superior entre les tres etapes
+  etapes_html <- paste0(
+    '<a href="', fitxers_historia, '"',
+    ifelse(seq_along(fitxers_historia) == i,
+           ' class="etapa-activa"',
+           ''),
+    '>',
+    trimws(dades_historia$Titol),
+    '</a>',
+    collapse = ""
+  )
+
+  # Enllaç a l'etapa anterior
+  anterior_html <- if (i > 1) {
+    paste0(
+      '<a class="historia-anterior" href="',
+      fitxers_historia[i - 1],
+      '">← ',
+      trimws(dades_historia$Titol[i - 1]),
+      '</a>'
+    )
+  } else {
+    '<span></span>'
+  }
+
+  # Enllaç a l'etapa següent
+  posterior_html <- if (i < nrow(dades_historia)) {
+    paste0(
+      '<a class="historia-posterior" href="',
+      fitxers_historia[i + 1],
+      '">',
+      trimws(dades_historia$Titol[i + 1]),
+      ' →</a>'
+    )
+  } else {
+    '<span></span>'
+  }
+
+  canvi_idioma <- selector_idioma(
+    paste0("../zones/", nom_html),
+    paste0("../zonas/", nom_html)
+  )
+
+  contingut <- paste0(
+'<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../css/estil.css">
+<title>', titol, '</title>
+</head>
+
+<body>
+
+', logo2_html, '
+
+', canvi_idioma, '
+
+<h1>Història de l’església</h1>
+
+<nav class="etapes-historia">
+', etapes_html, '
+</nav>
+
+<img src="../fotos/', foto, '" class="fitxa-imatge" alt="', titol, '">
+
+<h2 class="fitxa-titol">', titol, '</h2>
+
+<div class="fitxa-text">
+', text_html, '
+</div>
+
+<nav class="navegacio-historia">
+', anterior_html, '
+', posterior_html, '
+</nav>
+
+<p><a class="tornar" href="../index.html">← Tornar a la guia</a></p>
+
+<div class="logos-footer">
+  <img src="../fotos/logo-maioricasacra.png" alt="">
+  <img src="../fotos/logo-bisbat.png" alt="">
+</div>
+
+<div class="copyright">
+  © 2026 Maiorica Sacra. Tots els drets reservats.
+</div>
+
+</body>
+</html>'
+  )
+
+  writeLines(
+    contingut,
+    file.path(carpeta_zones, nom_html),
+    useBytes = TRUE
+  )
+}
+```
+
+
+
+
+### Fitxes
+
+
+
+Cream les fitxes de cada imatge:
+
+
+```{r}
+for (i in seq_len(nrow(dades))) {
+  
+  foto <- trimws(dades$Foto[i])
+  titol <- trimws(dades$Títol[i])
+  zona <- trimws(dades$Localització[i])
+  info <- trimws(dades$Informació[i])
+  
+  nom_html <- sub("\\.[^.]+$", ".html", foto)
+  nom_zona_html <- paste0(slugify(zona), ".html")
+  canvi_idioma <- selector_idioma(paste0("../fitxes/", nom_html), paste0("../fichas/", nom_html))
+  info_html <- format_info(info)
+  
+  contingut <- paste0(
+'<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../css/estil.css">
+<title>', titol, '</title>
+</head>
+<body>
+
+', logo2_html, '
+
+', canvi_idioma, '
+<img src="../', carpeta_fotos, '/', foto, '" class="fitxa-imatge">
+<h1 class="fitxa-titol">', titol, '</h1>
+
+<div class="fitxa-text">
+', info_html, '
+</div>
+
+<p><a class="tornar" href="../zones/', nom_zona_html, '">← Tornar</a></p>
+
+<div class="logos-footer">
+  <img src="../fotos/logo-maioricasacra.png" alt="">
+  <img src="../fotos/logo-bisbat.png" alt="">
+</div>
+
+<div class="copyright">
+  © 2026 Maiorica Sacra. Tots els drets reservats.
+</div>
+</body>
+</html>'
+  )
+  
+  writeLines(contingut, file.path(carpeta_fitxes, nom_html), useBytes = TRUE)
+}
+```
+
+### Zones
+
+Cream les pàgines de les zones:
+
+```{r}
+for (zona in zones_uniques) {
+  
+  subdades <- dades[trimws(dades$Localització) == zona, ]
+  nom_zona <- paste0(slugify(zona), ".html")
+  zona_cast_corresponent <- trimws(dades$Localización[match(zona, trimws(dades$Localització))])
+  nom_zona_cast <- paste0(slugify(zona_cast_corresponent), ".html")
+  canvi_idioma <- selector_idioma(paste0("../zones/", nom_zona), paste0("../zonas/", nom_zona_cast))
+  zona_path <- file.path(carpeta_zones, nom_zona)
+  
+  carpeta_imatges_zona <- if (usa_thumbs) carpeta_thumbs else carpeta_fotos
+  
+  inici <- paste0(
+'<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../css/estil.css">
+<title>', zona, '</title>
+</head>
+<body>
+
+', logo2_html, '
+
+', canvi_idioma, '
+<h1>', zona, '</h1>
+<div class="galeria">
+'
+  )
+  
+  items <- c()
+  
+  for (i in seq_len(nrow(subdades))) {
+    foto <- trimws(subdades$Foto[i])
+    titol <- trimws(subdades$Títol[i])
+    fitxa <- sub("\\.[^.]+$", ".html", foto)
+    
+    item_html <- paste0(
+'<a href="../fitxes/', fitxa, '" class="item-link">
+    <div class="item">
+        <img src="../', carpeta_imatges_zona, '/', foto, '" alt="', titol, '">
+        <p class="item-titol">', titol, '</p>
+        <p class="item-clica">Toca per veure la fitxa</p>
+    </div>
+</a>'
+    )
+    
+    items <- c(items, item_html)
+  }
+  
+  final <- '
+</div>
+
+<p><a class="tornar" href="../index.html">← Tornar</a></p>
+
+<div class="logos-footer">
+  <img src="../fotos/logo-maioricasacra.png" alt="">
+  <img src="../fotos/logo-bisbat.png" alt="">
+</div>
+
+<div class="copyright">
+  © 2026 Maiorica Sacra. Tots els drets reservats.
+</div>
+</body>
+</html>'
+  
+  contingut <- paste(c(inici, items, final), collapse = "\n")
+  
+  writeLines(contingut, zona_path, useBytes = TRUE)
+}
+```
+
+## Castellà
+
+
+### Portada
+
+```{r genera-portada-cast, eval=genera_portada}
+imatge_portada <- "planta.jpg"
+
+posiciones <- data.frame(
+zona = c(
+"Altar<br> Milagrosa",
+"Altar<br> Piedad",
+"Altar<br> Purísima",
+"Altar<br> Trinidad",
+"Altar<br> Sagrario",
+"Altar<br> S. Corazón" ,
+"Baptisteri",
+"Capilla<br> Lluc",
+"Capilla<br> Carmen",
+"Capilla<br> Rosario",
+"Capilla<br> San José" ,
+"Capilla<br> Sta Catalina",
+ "Capilla<br> Nacimiento" ,
+"Capilla<br> Santo Cristo",
+"Exterior",
+"Nave",
+"Presbiterio",
+"Historia"),
+top = c(
+"50%", #Mirac
+"31%", #APi
+"17.5%",  #APur
+"24.5%", #Trin
+"17.5%", #AS
+"31%", #SC
+"88%", #Bap
+"68.5%", #Lluc
+"78%", #Carme
+"59%", #Roser
+"68.5%", #StJosp
+"59%", #StCT
+"88%", #Naix
+"78%", #StCr
+"95.5%",#Ext
+"50%", #Nau
+"5%", #Prb
+"5%"), #Hist
+#
+left = c(
+"57%",  #Mirac
+"77.5%", #APi
+"22.5%", #APur
+"7.5%",#Trin
+"62.5%", #AS
+"7.5%", #SC
+"25%", #Bap
+"25%", #Lluc
+"25%", #Carme
+"25%", #Roser
+"54%",#StJosp
+"54%",#StCT
+"51%",  #Naix
+"54.5%", #StCr
+"40%",  #Ext
+"40%", #Nau
+"40%", #Prb
+"7.5%"), #Hist
+stringsAsFactors = FALSE
+)
+
+posiciones$fitxer <- c(paste0(slugify(zones_unicas), ".html"),"primitiva.html")
+
+botones_html <- paste0(
+  '<a href="zonas/', posiciones$fitxer, '">
+    <div class="boto-zona" style="top: ', posiciones$top, '; left: ', posiciones$left, ';">
+      ', posiciones$zona, '
+    </div>
+  </a>',
+  collapse = "\n"
+)
+
+
+
+indexcast_html <- paste0(
+'<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/estil.css">
+<title>Santa Bàrbara</title>
+</head>
+
+<body>
+
+
+', logo_html, '
+', selector_idioma("index.html", index_cast_file), '
+<h1>Iglesia de Santa Bárbara</h1>
+
+<div class="contenidor-imatge">
+    <img src="fotos/', imatge_portada, '" alt="Planta">
+
+', botones_html, '
+
+</div>
+
+
+<div class="logos-footer">
+  <img src="fotos/logo-maioricasacra.png" alt="">
+  <img src="fotos/logo-bisbat.png" alt="">
+</div>
+
+<div class="copyright">
+  © 2026 Maiorica Sacra. Tots els drets reservats.
+</div>
+</body>
+</html>'
+)
+
+writeLines(indexcast_html, index_cast_file)
+```
+
+
+### Historia
+
+
+```{r genera-historia-cast}
+for (i in seq_len(nrow(dades_historia))) {
+
+  foto <- trimws(dades_historia$Foto[i])
+  titulo <- trimws(dades_historia$Titulo[i])
+  texto <- trimws(dades_historia$Text_esp[i])
+  nombre_html <- fitxers_historia[i]
+
+  texto_html <- format_info(texto)
+
+  # Navegación superior entre las tres etapas
+  etapas_html <- paste0(
+    '<a href="', fitxers_historia, '"',
+    ifelse(seq_along(fitxers_historia) == i,
+           ' class="etapa-activa"',
+           ''),
+    '>',
+    trimws(dades_historia$Titulo),
+    '</a>',
+    collapse = ""
+  )
+
+  # Enlace a la etapa anterior
+  anterior_html <- if (i > 1) {
+    paste0(
+      '<a class="historia-anterior" href="',
+      fitxers_historia[i - 1],
+      '">← ',
+      trimws(dades_historia$Titulo[i - 1]),
+      '</a>'
+    )
+  } else {
+    '<span></span>'
+  }
+
+  # Enlace a la etapa siguiente
+  posterior_html <- if (i < nrow(dades_historia)) {
+    paste0(
+      '<a class="historia-posterior" href="',
+      fitxers_historia[i + 1],
+      '">',
+      trimws(dades_historia$Titulo[i + 1]),
+      ' →</a>'
+    )
+  } else {
+    '<span></span>'
+  }
+
+  cambio_idioma <- selector_idioma(
+    paste0("../zones/", nombre_html),
+    paste0("../zonas/", nombre_html)
+  )
+
+  contenido <- paste0(
+'<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../css/estil.css">
+<title>', titulo, '</title>
+</head>
+
+<body>
+
+', logo2_html, '
+
+', cambio_idioma, '
+
+<h1>Historia de la iglesia</h1>
+
+<nav class="etapes-historia">
+', etapas_html, '
+</nav>
+
+<img src="../fotos/', foto, '" class="fitxa-imatge" alt="', titulo, '">
+
+<h2 class="fitxa-titol">', titulo, '</h2>
+
+<div class="fitxa-text">
+', texto_html, '
+</div>
+
+<nav class="navegacio-historia">
+', anterior_html, '
+', posterior_html, '
+</nav>
+
+<p><a class="tornar" href="../index_cast.html">← Volver a la guía</a></p>
+
+<div class="logos-footer">
+  <img src="../fotos/logo-maioricasacra.png" alt="">
+  <img src="../fotos/logo-bisbat.png" alt="">
+</div>
+
+<div class="copyright">
+  © 2026 Maiorica Sacra. Todos los derechos reservados.
+</div>
+
+</body>
+</html>'
+  )
+
+  writeLines(
+    contenido,
+    file.path(carpeta_zonas, nombre_html),
+    useBytes = TRUE
+  )
+}
+```
+
+### Fitxes
+
+
+```{r}
+for (i in seq_len(nrow(dades))) {
+  
+  foto <- trimws(dades$Foto[i])
+  titulo <- trimws(dades$Título[i])
+  zona_cast <- trimws(dades$Localización[i])
+  info_cast <- trimws(dades$Información[i])
+  
+  nombre_html <- sub("\\.[^.]+$", ".html", foto)
+  nombre_zona_html <- paste0(slugify(zona_cast), ".html")
+  cambio_idioma <- selector_idioma(paste0("../fitxes/", nombre_html), paste0("../fichas/", nombre_html))
+  info_cast_html <- format_info(info_cast)
+  
+  contenido <- paste0(
+'<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../css/estil.css">
+<title>', titulo, '</title>
+</head>
+<body>
+
+', logo2_html, '
+
+', cambio_idioma, '
+<img src="../', carpeta_fotos, '/', foto, '" class="fitxa-imatge">
+<h1 class="fitxa-titol">', titulo, '</h1>
+
+<div class="fitxa-text">
+', info_cast_html, '
+</div>
+
+<p><a class="tornar" href="../zonas/', nombre_zona_html, '">← Volver</a></p>
+
+<div class="logos-footer">
+  <img src="../fotos/logo-maioricasacra.png" alt="">
+  <img src="../fotos/logo-bisbat.png" alt="">
+</div>
+
+<div class="copyright">
+  © 2026 Maiorica Sacra. Tots els drets reservats.
+</div>
+</body>
+</html>'
+  )
+  
+  writeLines(contenido, file.path(carpeta_fichas, nombre_html), useBytes = TRUE)
+}
+```
+
+### Zones
+
+
+```{r}
+for (zona in zones_unicas) {
+  
+  subdades <- dades[trimws(dades$Localización) == zona, ]
+  nom_zona_cast <- paste0(slugify(zona), ".html")
+  zona_cat_corresponent <- trimws(dades$Localització[match(zona, trimws(dades$Localización))])
+  nom_zona_cat <- paste0(slugify(zona_cat_corresponent), ".html")
+  cambio_idioma <- selector_idioma(paste0("../zones/", nom_zona_cat), paste0("../zonas/", nom_zona_cast))
+  zona_cast_path <- file.path(carpeta_zonas, nom_zona_cast)
+  
+  carpeta_imagenes_zona <- if (usa_thumbs) carpeta_thumbs else carpeta_fotos
+  
+  inici <- paste0(
+'<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../css/estil.css">
+<title>', zona, '</title>
+</head>
+<body>
+
+', logo2_html, '
+
+', cambio_idioma, '
+<h1>', zona, '</h1>
+<div class="galeria">
+'
+  )
+  
+  items <- c()
+  
+  for (i in seq_len(nrow(subdades))) {
+    foto <- trimws(subdades$Foto[i])
+    titulo <- trimws(subdades$Título[i])
+    ficha <- sub("\\.[^.]+$", ".html", foto)
+    
+    item_html <- paste0(
+'<a href="../fichas/', ficha, '" class="item-link">
+    <div class="item">
+        <img src="../', carpeta_imagenes_zona, '/', foto, '" alt="', titulo, '">
+        <p class="item-titol">', titulo, '</p>
+        <p class="item-clica">Toca para ver la ficha</p>
+    </div>
+</a>'
+    )
+    
+    items <- c(items, item_html)
+  }
+  
+  final <- '
+</div>
+
+<p><a class="tornar" href="../index_cast.html">← Volver</a></p>
+
+<div class="logos-footer">
+  <img src="../fotos/logo-maioricasacra.png" alt="">
+  <img src="../fotos/logo-bisbat.png" alt="">
+</div>
+
+<div class="copyright">
+  © 2026 Maiorica Sacra. Tots els drets reservats.
+</div>
+</body>
+</html>'
+  
+  contingut <- paste(c(inici, items, final), collapse = "\n")
+  
+  writeLines(contingut, zona_cast_path, useBytes = TRUE)
+}
+```
+
